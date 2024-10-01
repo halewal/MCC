@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McDonald's Calorie Counter</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <style>
+        /* Basic Styles */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background-color: #ffc44c;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .navbar-logo {
+                  background-image: url("McDonalds-Logo.png");
+                  color: white;
+                  font-weight: bold;
+                  font-size: 24px;
+                  padding: 10px;
+                  width: 50px;
+                  height: 25px;
+                  background-size: cover;
+                  background-repeat: no-repeat;
+                  display: inline-block;
+            }
+
+
+        .navbar-buttons {
+                  font-family: "Franklin Gothic Book", sans-serif;
+                  src: url(FRABK.tff)
+                  font-weight: bold;
+            display: flex;
+        }
+
+        .navbar-buttons a {
+            text-decoration: none;
+            color: black;
+            padding: 10px 20px;
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        .navbar-buttons a:hover {
+            background-color: #e6b145;
+        }
+
+        .container {
+            display: flex;
+            margin: 20px 20px 60px;
+            padding: 0 20px;
+            flex: 1;
+            flex-direction: row;
+        }
+
+        .left-panel, .right-panel {
+            border: 1px solid black;
+            padding: 20px;
+        }
+
+        .left-panel {
+            width: 30%;
+        }
+
+        .right-panel {
+            width: 60%;
+            margin-left: 20px;
+        }
+
+        .calories-section {
+            border: 1px solid black;
+            padding: 20px;
+            margin-bottom: 20px;
+            max-height: 900px;
+            overflow-y: auto;
+        }
+
+        .total-calories {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #ffc44c;
+            color: black;
+                  border-radius: 5px;
+            border: none;
+            cursor: pointer;
+                  font-family: "Franklin Gothic Book", sans-serif;
+                  src: url(FRABK.ttf)
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color:#e6b145;
+        }
+
+        /* Header */
+        h1 {
+                  font-family: "Arial", sans-serif;
+                  color: #292929;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        footer {
+                  font-family: "Franklin Gothic Book", sans-serif;
+                  font-weight: bold;
+            background-color: #ffc44c;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="navbar-logo"></div>
+        <div class="navbar-buttons">
+            <a href="#">Home</a>
+            <a href="#">Calorie Counter</a>
+            <a href="#">About</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Panel -->
+        <div class="left-panel">
+            <h1>McDonald's Calorie Counter</h1>
+
+            <div class="input-group">
+                <label for="food">Select Food Item</label>
+                <select id="food" style="width:100%; padding:10px; margin-bottom:10px; margin-top:10px;"></select>
+            </div>
+
+            <button id="addToOrder">Add to "Order"</button>
+            <button id="removeFromOrder">Remove From "Order"</button>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+            <div class="calories-section">
+                <p style="font-family:Franklin Gothic Book, sans-serif; font-weight: bold;">Calories of Food Added:</p>
+                <ul id="caloriesList"></ul>
+            </div>
+
+            <div class="total-calories" style="font-family:Trebuchet MS, sans-serif; font-weight: bold;">
+                Total Calories of "Order": <span id="totalCalories">0</span>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Not Affiliated With McDonald's®</p>
+    </footer>
+
+    <script>
+        const menuData = [
+                  { itemName: "Big Mac", calories: 540 },
+                  { itemName: "McChicken", calories: 400 },
+                  { itemName: "Fries (Medium)", calories: 340 },
+                  { itemName: "Coca-Cola (Medium)", calories: 210 },
+                  { itemName: "Egg McMuffin", calories: 300 },
+                  { itemName: "Egg White Delight", calories: 250 },
+                  { itemName: "Sausage McMuffin", calories: 370 },
+                  { itemName: "Sausage McMuffin with Egg Whites", calories: 450 },
+                  { itemName: "Double Quarter Pounder with Cheese", calories: 750 }
+                  // Add more menu items here
+            ];
+
+
+        let totalCalories = 0;
+        const caloriesList = document.getElementById('caloriesList');
+
+        // Load the menu data directly from the array
+        const foodSelect = document.getElementById('food');
+        menuData.forEach((menuItem) => {
+            const option = document.createElement('option');
+            option.value = menuItem.itemName;
+            option.textContent = `${menuItem.itemName} - ${menuItem.calories} calories`;
+            foodSelect.appendChild(option);
+        });
+
+        document.getElementById('addToOrder').addEventListener('click', function() {
+            const food = document.getElementById('food');
+            const selectedFood = food.options[food.selectedIndex].text;
+            const calories = parseInt(selectedFood.match(/\d+/)[0]);
+
+            // Add selected food to the list
+            const li = document.createElement('li');
+            li.textContent = selectedFood;
+            li.dataset.calories = calories;
+            caloriesList.appendChild(li);
+
+            // Update total calories
+            totalCalories += calories;
+            document.getElementById('totalCalories').textContent = totalCalories;
+        });
+
+        document.getElementById('removeFromOrder').addEventListener('click', function() {
+            const selectedItems = Array.from(caloriesList.querySelectorAll('li'));
+            const lastItem = selectedItems[selectedItems.length - 1];
+            if (lastItem) {
+                const calories = parseInt(lastItem.dataset.calories);
+                totalCalories -= calories;
+                document.getElementById('totalCalories').textContent = totalCalories;
+                caloriesList.removeChild(lastItem); // Remove the last item
+            }
+        });
+    </script>
+
+</body>
+</html>
